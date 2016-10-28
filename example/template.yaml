@@ -5,9 +5,7 @@ defaults:
     font: arial
     size: 12
     align: L
-    bold: 0
-    italic: 0
-    underline: 0
+    style: ''
     foreground: 0
     background: 0xFFFFFF
     priority: 10
@@ -16,16 +14,16 @@ templates:
     textbox: &textbox
         w: 20
         h: 20
-        type: T
+        type: text
 
 info:
     <<: *textbox
-    x1: 10
+    x: 10
     y: 10
     text: Hallo Welt
 
 info2:
     <<: *textbox
-    x1: 10
+    x: 10
     y: 40
     text: Hello World, this is me.
