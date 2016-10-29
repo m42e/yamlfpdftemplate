@@ -22,6 +22,7 @@ class YaFTe():
         self.pdf = FPDF(**self.get_fpdfoptions(), unit="mm")
         self.set_docoptions()
         self.prepare_elements()
+        self.pdf.set_auto_page_break(False)
 
     def get_fpdfoptions(self):
         options = {}
@@ -81,31 +82,38 @@ class YaFTe():
         else:
             raise KeyError ('{name} is no element'.format(name=name))
 
-    def element_text(self, x, y, w, h, text, font, size, style, align, foreground=None, border=0, bordercolor=0, fill=False, background=None, multiline=False, **kwargs):
-        self.pdf.set_text_color(*rgb(foreground))
-        self.pdf.set_fill_color(*rgb(foreground))
-        self.pdf.set_draw_color(*rgb(bordercolor))
+    def element_text(self, x, y, w, h, text, font, size, style='', align='L', foreground=None, border=0, bordercolor=0, fill=False, background=None, multiline=False, **kwargs):
+        if background is not None:
+            self.pdf.set_fill_color(*rgb(background))
+        if foreground is not None:
+            self.pdf.set_text_color(*rgb(foreground))
+        if bordercolor is not None:
+            self.pdf.set_draw_color(*rgb(bordercolor))
         self.pdf.set_font(font,style,size)
         self.pdf.set_xy(x,y)
-        if not multiline:
-            self.pdf.cell(w=w,h=h,txt=text,border=border,ln=0,align=align)
+        if not multiline in [1, True, 'true']:
+            self.pdf.cell(w=w,h=h,txt=text,border=border,ln=0,align=align, fill=fill)
         else:
-            self.pdf.multi_cell(w=w,h=h,txt=text,border=border,align=align)
+            self.pdf.multi_cell(w=w,h=self.pdf.k*size/10*1.2,txt=text,border=border,align='J')
 
-    def element_box(self, x, y, w, h, border, bordercolor, **kwargs):
-        self.pdf.set_fill_color(*rgb(foreground))
-        self.pdf.set_draw_color(*rgb(bordercolor))
+    def element_box(self, x, y, w, h, border, background=0, bordercolor=0xFFFFFF, style='D', **kwargs):
+        if background is not None:
+            self.pdf.set_fill_color(*rgb(background))
+        if bordercolor is not None:
+            self.pdf.set_draw_color(*rgb(bordercolor))
+        self.pdf.rect(x, y, w, h, style=style)
         pass
 
-    def element_rect(self, x1, y1, x2, y2, text, font, size, bold, italic, underline, align, forefround, fill, background, multiline=None, **kwargs):
-        self.pdf.set_draw_color(*rgb(bordercolor))
-        pdf.rect(x, y, x2-x1, y2-y1)
+    def element_rect(self,  **kwargs):
+        self.rect(**kwargs, style='F')
         pass
 
-    def element_image(self, x1, y1, x2, y2, text, font, size, bold, italic, underline, align, forefround, fill, background, multiline=None, **kwargs):
+    def element_image(self, x, y, w, h, text, **kwargs):
+        self.pdf.image(text,x,y,w,h,type='',link='')
         pass
 
     def element_unknown(self, type, **kwargs):
         print('detected unknown type: {0}'.format(type))
         pass
+
 
