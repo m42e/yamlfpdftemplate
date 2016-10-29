@@ -108,8 +108,8 @@ class YaFTe():
         self.rect(**kwargs, style='F')
         pass
 
-    def element_image(self, x, y, w, h, text, **kwargs):
-        self.pdf.image(text,x,y,w,h,type='',link='')
+    def element_image(self, x, y, w, h, text, link='', type='', **kwargs):
+        self.pdf.image(text,x,y,w,h,type=type,link=link)
         pass
 
     def element_unknown(self, type, **kwargs):
